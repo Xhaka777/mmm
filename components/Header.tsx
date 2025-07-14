@@ -3,10 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Menu, Search, ShoppingBag } from 'lucide-react-native';
 import SlidingMenu from './SlidingMenu';
 import LoginScreen from './LoginScreen';
+import GlobalShoppingCart from './GlobalShoppingCart';
+import { useCart } from '@/contexts/CartContext';
 
 export default function Header() {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isLoginVisible, setIsLoginVisible] = useState(false);
+  const { getTotalItems, setIsCartVisible, isCartVisible } = useCart();
+  
+  const totalItems = getTotalItems();
 
   const handleMenuPress = () => {
     setIsMenuVisible(true);
@@ -25,6 +30,14 @@ export default function Header() {
     setIsLoginVisible(false);
   };
 
+  const handleCartPress = () => {
+    setIsCartVisible(true);
+  };
+
+  const handleCartClose = () => {
+    setIsCartVisible(false);
+  };
+
   return (
     <>
       <View style={styles.container}>
@@ -38,8 +51,18 @@ export default function Header() {
           <TouchableOpacity style={styles.iconButton}>
             <Search size={24} color="#1f2937" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <ShoppingBag size={24} color="#1f2937" />
+          
+          <TouchableOpacity style={styles.iconButton} onPress={handleCartPress}>
+            <View style={styles.cartIconContainer}>
+              <ShoppingBag size={24} color="#1f2937" />
+              {totalItems > 0 && (
+                <View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>
+                    {totalItems > 99 ? '99+' : totalItems.toString()}
+                  </Text>
+                </View>
+              )}
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -53,6 +76,11 @@ export default function Header() {
       <LoginScreen 
         isVisible={isLoginVisible} 
         onClose={handleLoginClose}
+      />
+      
+      <GlobalShoppingCart 
+        isVisible={isCartVisible}
+        onClose={handleCartClose}
       />
     </>
   );
@@ -83,5 +111,26 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 8,
     marginLeft: 8,
+  },
+  cartIconContainer: {
+    position: 'relative',
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    backgroundColor: '#ef4444',
+    borderRadius: 10,
+    minWidth: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  cartBadgeText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: 'Assistant, sans-serif',
   },
 });

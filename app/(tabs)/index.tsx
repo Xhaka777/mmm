@@ -8,6 +8,7 @@ import BestsellersSection from '@/components/BestsellersSection';
 import CollectionsSection from '@/components/CollectionsSection';
 import ProductsSection from '@/components/ProductsSection';
 import Footer from '@/components/Footer';
+import AnimatedTextBanner from '@/components/AnimatedTextBanner';
 
 export default function HomeScreen() {
   return (
@@ -18,11 +19,12 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         bounces={false}
       >
-        <HeroSlider />
+        {/* <HeroSlider /> */}
         <PromotionalSection />
-        <BestsellersSection />
+        {/* <BestsellersSection /> */}
         <CollectionsSection />
         <ProductsSection />
+        <AnimatedTextBanner/>
         <Footer />
       </ScrollView>
     </SafeAreaView>

@@ -1,33 +1,34 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import ProductCard from './ProductCard';
+import { productImages } from '@/utils/images';
 
 const products = [
   {
     id: 1,
     name: 'Papuçe Anatomike per Femra-ARTSY-Art34',
-    image: 'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeBrown1, // Local image
     discountPrice: 19.8,
     originalPrice: 33,
   },
   {
     id: 2,
     name: 'Çanta Lëkure për Femra-LUXURY-Art45',
-    image: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoePink1, // Local image
     discountPrice: 45.0,
     originalPrice: 65,
   },
   {
     id: 3,
     name: 'Këpucë Sport për Meshkuj-COMFORT-Art12',
-    image: 'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeOrange1, // Local image
     discountPrice: 32.5,
     originalPrice: 50,
   },
   {
     id: 4,
     name: 'Aksesore Lëkure-PREMIUM-Art78',
-    image: 'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeGreen1, // Local image
     discountPrice: 15.9,
     originalPrice: 25,
   },
@@ -36,6 +37,7 @@ const products = [
 export default function ProductsSection() {
   const renderProduct = ({ item }: { item: any }) => (
     <ProductCard
+      id={item.id.toString()}
       name={item.name}
       image={item.image}
       discountPrice={item.discountPrice}

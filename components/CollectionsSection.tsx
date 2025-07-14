@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import CollectionCard from './CollectionCard';
+import { productImages } from '@/utils/images';
 
 const { width } = Dimensions.get('window');
 
@@ -8,32 +9,32 @@ const collections = [
   {
     id: 1,
     name: 'Summer Shoes',
-    image: 'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeOrange1, // Local image
   },
   {
     id: 2,
     name: 'Leather Bags',
-    image: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoePink1, // Local image
   },
   {
     id: 3,
     name: 'Accessories',
-    image: 'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeGreen1, // Local image
   },
   {
     id: 4,
     name: 'Men\'s Collection',
-    image: 'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeCofe1, // Local image
   },
   {
     id: 5,
     name: 'Women\'s Collection',
-    image: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeViol1, // Local image
   },
   {
     id: 6,
     name: 'Casual Wear',
-    image: 'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeBrown2, // Local image
   },
 ];
 

@@ -23,6 +23,7 @@ interface Product {
   name: string;
   price: string;
   images: string[];
+  image?: string; // fallback for single image
 }
 
 interface ProductOptionsModalProps {
@@ -42,16 +43,17 @@ export default function ProductOptionsModal({
 }: ProductOptionsModalProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
-  const translateY = useSharedValue(height);
+  const translateY = useSharedValue(height * 0.5); // Start from 50% of screen height
   const scrollViewRef = useRef<ScrollView>(null);
 
   React.useEffect(() => {
     if (isVisible) {
+      console.log('Modal becoming visible with product:', product?.name); // Debug log
       translateY.value = withTiming(0, { duration: 300 });
       setCurrentImageIndex(0);
       setSelectedSize('');
     } else {
-      translateY.value = withTiming(height, { duration: 300 });
+      translateY.value = withTiming(height * 0.5, { duration: 300 });
     }
   }, [isVisible]);
 
@@ -60,13 +62,14 @@ export default function ProductOptionsModal({
   }));
 
   const handleClose = () => {
-    translateY.value = withTiming(height, { duration: 300 }, () => {
+    console.log('Modal close requested'); // Debug log
+    translateY.value = withTiming(height * 0.5, { duration: 300 }, () => {
       runOnJS(onClose)();
     });
   };
 
   const handlePreviousImage = () => {
-    if (product && currentImageIndex > 0) {
+    if (product && getProductImages().length > 0 && currentImageIndex > 0) {
       const newIndex = currentImageIndex - 1;
       setCurrentImageIndex(newIndex);
       scrollViewRef.current?.scrollTo({ x: newIndex * width, animated: true });
@@ -74,7 +77,8 @@ export default function ProductOptionsModal({
   };
 
   const handleNextImage = () => {
-    if (product && currentImageIndex < product.images.length - 1) {
+    const productImages = getProductImages();
+    if (product && productImages.length > 0 && currentImageIndex < productImages.length - 1) {
       const newIndex = currentImageIndex + 1;
       setCurrentImageIndex(newIndex);
       scrollViewRef.current?.scrollTo({ x: newIndex * width, animated: true });
@@ -93,12 +97,33 @@ export default function ProductOptionsModal({
 
   const handleAddToCart = () => {
     if (product && selectedSize) {
+      console.log('Adding to cart:', product.id, selectedSize); // Debug log
       onAddToCart(product.id, selectedSize);
-      handleClose();
+    } else {
+      console.log('Cannot add to cart - missing product or size'); // Debug log
     }
   };
 
+  // Helper function to get product images with fallback
+  const getProductImages = () => {
+    if (!product) return [];
+    
+    // If product has images array, use it
+    if (product.images && product.images.length > 0) {
+      return product.images;
+    }
+    
+    // Fallback to single image if available
+    if (product.image) {
+      return [product.image];
+    }
+    
+    return [];
+  };
+
   if (!isVisible || !product) return null;
+
+  const productImages = getProductImages();
 
   return (
     <View style={styles.overlay}>
@@ -113,17 +138,18 @@ export default function ProductOptionsModal({
 
         {/* Image Carousel */}
         <View style={styles.imageContainer}>
-          {/* Left Arrow */}
-          <TouchableOpacity 
-            style={[styles.arrowButton, styles.leftArrow]}
-            onPress={handlePreviousImage}
-            disabled={currentImageIndex === 0}
-          >
-            <ChevronLeft 
-              size={24} 
-              color={currentImageIndex === 0 ? "#d1d5db" : "#1f2937"} 
-            />
-          </TouchableOpacity>
+          {productImages.length > 1 && (
+            <TouchableOpacity 
+              style={[styles.arrowButton, styles.leftArrow]}
+              onPress={handlePreviousImage}
+              disabled={currentImageIndex === 0}
+            >
+              <ChevronLeft 
+                size={24} 
+                color={currentImageIndex === 0 ? "#d1d5db" : "#1f2937"} 
+              />
+            </TouchableOpacity>
+          )}
 
           {/* Image Slider */}
           <ScrollView
@@ -137,8 +163,9 @@ export default function ProductOptionsModal({
             snapToInterval={width}
             snapToAlignment="center"
             style={styles.imageScrollView}
+            scrollEnabled={productImages.length > 1}
           >
-            {product.images.map((image, index) => (
+            {productImages.map((image, index) => (
               <View key={index} style={styles.imageSlide}>
                 <Image
                   source={{ uri: image }}
@@ -149,17 +176,33 @@ export default function ProductOptionsModal({
             ))}
           </ScrollView>
 
-          {/* Right Arrow */}
-          <TouchableOpacity 
-            style={[styles.arrowButton, styles.rightArrow]}
-            onPress={handleNextImage}
-            disabled={currentImageIndex === product.images.length - 1}
-          >
-            <ChevronRight 
-              size={24} 
-              color={currentImageIndex === product.images.length - 1 ? "#d1d5db" : "#1f2937"} 
-            />
-          </TouchableOpacity>
+          {productImages.length > 1 && (
+            <TouchableOpacity 
+              style={[styles.arrowButton, styles.rightArrow]}
+              onPress={handleNextImage}
+              disabled={currentImageIndex === productImages.length - 1}
+            >
+              <ChevronRight 
+                size={24} 
+                color={currentImageIndex === productImages.length - 1 ? "#d1d5db" : "#1f2937"} 
+              />
+            </TouchableOpacity>
+          )}
+
+          {/* Image Indicators */}
+          {productImages.length > 1 && (
+            <View style={styles.imageIndicators}>
+              {productImages.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.indicator,
+                    index === currentImageIndex ? styles.activeIndicator : styles.inactiveIndicator,
+                  ]}
+                />
+              ))}
+            </View>
+          )}
         </View>
 
         {/* Product Info */}
@@ -188,7 +231,10 @@ export default function ProductOptionsModal({
                   styles.sizeButton,
                   selectedSize === size && styles.selectedSizeButton
                 ]}
-                onPress={() => setSelectedSize(size)}
+                onPress={() => {
+                  console.log('Size selected:', size); // Debug log
+                  setSelectedSize(size);
+                }}
               >
                 <Text style={[
                   styles.sizeText,
@@ -210,7 +256,12 @@ export default function ProductOptionsModal({
           onPress={handleAddToCart}
           disabled={!selectedSize}
         >
-          <Text style={styles.addToCartText}>ADD TO CART</Text>
+          <Text style={[
+            styles.addToCartText,
+            !selectedSize && styles.disabledText
+          ]}>
+            {selectedSize ? 'ADD TO CART' : 'SELECT A SIZE'}
+          </Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -232,7 +283,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: height * 0.5,
+    height: height * 0.5, // Exactly 50% of screen height
     backgroundColor: '#ffffff',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -270,15 +321,15 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: 120,
     position: 'relative',
-    marginVertical: 20,
+    marginVertical: 10,
   },
   arrowButton: {
     position: 'absolute',
     top: '50%',
     zIndex: 10,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -290,13 +341,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
-    transform: [{ translateY: -20 }],
+    transform: [{ translateY: -18 }],
   },
   leftArrow: {
-    left: 20,
+    left: 15,
   },
   rightArrow: {
-    right: 20,
+    right: 15,
   },
   imageScrollView: {
     flex: 1,
@@ -307,13 +358,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   productImage: {
-    width: 200,
+    width: 180,
     height: 120,
+  },
+  imageIndicators: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  indicator: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginHorizontal: 3,
+  },
+  activeIndicator: {
+    backgroundColor: '#1f2937',
+  },
+  inactiveIndicator: {
+    backgroundColor: 'rgba(31, 41, 55, 0.3)',
   },
   productInfo: {
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   productName: {
     fontSize: 16,
@@ -334,17 +406,17 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#e5e7eb',
     marginHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   sizeSection: {
     paddingHorizontal: 20,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   sizeHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   sizeLabel: {
     fontSize: 16,
@@ -361,11 +433,11 @@ const styles = StyleSheet.create({
   sizeGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 10,
   },
   sizeButton: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 4,
@@ -376,9 +448,10 @@ const styles = StyleSheet.create({
   selectedSizeButton: {
     borderColor: '#1f2937',
     borderWidth: 2,
+    backgroundColor: '#f9fafb',
   },
   sizeText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
     color: '#6b7280',
     fontFamily: 'Assistant, sans-serif',
@@ -390,7 +463,7 @@ const styles = StyleSheet.create({
   addToCartButton: {
     backgroundColor: '#fbbf24',
     marginHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 14,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 20,
@@ -405,4 +478,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     fontFamily: 'Assistant, sans-serif',
   },
+  disabledText: {
+    color: '#9ca3af',
+  }
 });

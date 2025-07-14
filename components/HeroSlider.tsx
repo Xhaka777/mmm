@@ -1,14 +1,16 @@
+import { heroImages } from '@/utils/images';
 import React, { useState, useRef } from 'react';
 import { View, Image, StyleSheet, Dimensions, ScrollView } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-const heroImages = [
-  'https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/832998/pexels-photo-832998.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1656684/pexels-photo-1656684.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/2529157/pexels-photo-2529157.jpeg?auto=compress&cs=tinysrgb&w=800',
+const heroImageArray = [
+  heroImages.hero1,
+  heroImages.women_login,
+  // You can add more hero images here or repeat existing ones
+  heroImages.hero1,
+  heroImages.women_login,
+  heroImages.hero1,
 ];
 
 export default function HeroSlider() {
@@ -38,19 +40,20 @@ export default function HeroSlider() {
         snapToInterval={width}
         snapToAlignment="center"
       >
-        {heroImages.map((image, index) => (
+       {heroImageArray.map((image, index) => (
           <View key={index} style={styles.slide}>
             <Image
-              source={{ uri: image }}
+              source={image} // Local image
               style={styles.image}
               resizeMode="cover"
             />
           </View>
         ))}
+
       </ScrollView>
       
       <View style={styles.pagination}>
-        {heroImages.map((_, index) => (
+        {heroImageArray.map((_, index) => (
           <View
             key={index}
             style={[

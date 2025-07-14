@@ -1,46 +1,51 @@
 import React, { useState, useRef } from 'react';
-import { 
-  View, 
-  Text, 
-  StyleSheet, 
-  ScrollView, 
-  Image, 
-  TouchableOpacity, 
-  Dimensions 
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Dimensions
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Truck, RotateCcw, Plus, Minus } from 'lucide-react-native';
-import ShoppingCart from '@/components/ShoppingCart';
+import { Truck, RotateCcw, Plus, Minus } from 'lucide-react-native';
+import Header from '@/components/Header';
+import FeaturesSection from '@/components/FeaturesSection';
+import Footer from '@/components/Footer';
+import { useCart } from '@/contexts/CartContext';
+import { productImages } from '@/utils/images';
 
 const { width } = Dimensions.get('window');
 
-const productImages = [
-  'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=800',
+const productImageArray = [
+  productImages.shoeBrown1,
+  productImages.shoeBrown2,
+  productImages.shoePink1,
+  productImages.shoePink2,
+  productImages.shoeOrange1,
+  productImages.shoeOrange2,
 ];
 
 const sizes = ['36', '37', '38', '39', '40', '41', '42'];
+const unavailableSizes = ['36', '39', '42']; // Sizes that are out of stock
 
 export default function ProductDetailScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
+  const { addToCart, setIsCartVisible } = useCart();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState('');
   const [materialExpanded, setMaterialExpanded] = useState(false);
   const [deliveryExpanded, setDeliveryExpanded] = useState(false);
-  const [isCartVisible, setIsCartVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
 
   const onScroll = (event: any) => {
     const slideSize = event.nativeEvent.layoutMeasurement.width;
     const index = event.nativeEvent.contentOffset.x / slideSize;
     const roundIndex = Math.round(index);
-    
+
     if (roundIndex !== currentImageIndex) {
       setCurrentImageIndex(roundIndex);
     }
@@ -51,28 +56,24 @@ export default function ProductDetailScreen() {
       alert('Please select a size');
       return;
     }
-    setIsCartVisible(true);
-  };
 
-  const cartItem = {
-    id: '1',
-    name: 'RUBIK HIGH-SOLED SANDALS - BROWN',
-    price: 39995, // Price in cents
-    size: selectedSize,
-    image: productImages[0],
-    quantity: 1,
+    const cartItem = {
+      id: '1',
+      name: 'RUBIK HIGH-SOLED SANDALS - BROWN',
+      price: 39995, // Price in cents
+      size: selectedSize,
+      image: productImages.shoeBrown1,
+      quantity: 1,
+    };
+
+    addToCart(cartItem);
+    setIsCartVisible(true);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={24} color="#1f2937" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>30 DAY RETURN POLICY</Text>
-        <View style={styles.headerRight} />
-      </View>
+      {/* Use the same Header component as index.tsx */}
+      <Header />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Image Slider */}
@@ -88,39 +89,40 @@ export default function ProductDetailScreen() {
             snapToInterval={width}
             snapToAlignment="center"
           >
-            {productImages.map((image, index) => (
+            {productImageArray.map((image, index) => (
               <View key={index} style={styles.imageSlide}>
                 <Image
-                  source={{ uri: image }}
+                  source={image} // Local image
                   style={styles.productImage}
                   resizeMode="cover"
                 />
               </View>
             ))}
           </ScrollView>
-          
+
           {/* Image Pagination */}
           <View style={styles.imagePagination}>
-            {productImages.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.imageDot,
-                  index === currentImageIndex ? styles.activeImageDot : styles.inactiveImageDot,
-                ]}
-              />
+            {productImageArray.map((image, index) => (
+              <TouchableOpacity key={index}>
+                <Image
+                  source={image} // Local image
+                  style={styles.thumbnailImage}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
             ))}
+
           </View>
         </View>
 
         {/* Thumbnail Images */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.thumbnailContainer}
           contentContainerStyle={styles.thumbnailContent}
         >
-          {productImages.map((image, index) => (
+          {productImageArray.map((image, index) => (
             <TouchableOpacity
               key={index}
               style={[
@@ -166,23 +168,34 @@ export default function ProductDetailScreen() {
         <View style={styles.sizeSection}>
           <Text style={styles.sizeLabel}>Size:</Text>
           <View style={styles.sizeGrid}>
-            {sizes.map((size) => (
-              <TouchableOpacity
-                key={size}
-                style={[
-                  styles.sizeButton,
-                  selectedSize === size && styles.selectedSizeButton
-                ]}
-                onPress={() => setSelectedSize(size)}
-              >
-                <Text style={[
-                  styles.sizeText,
-                  selectedSize === size && styles.selectedSizeText
-                ]}>
-                  {size}
-                </Text>
-              </TouchableOpacity>
-            ))}
+            {sizes.map((size) => {
+              const isUnavailable = unavailableSizes.includes(size);
+              const isSelected = selectedSize === size && !isUnavailable;
+
+              return (
+                <TouchableOpacity
+                  key={size}
+                  style={[
+                    styles.sizeButton,
+                    isSelected && styles.selectedSizeButton,
+                    isUnavailable && styles.unavailableSizeButton
+                  ]}
+                  onPress={() => !isUnavailable && setSelectedSize(size)}
+                  disabled={isUnavailable}
+                >
+                  <Text style={[
+                    styles.sizeText,
+                    isSelected && styles.selectedSizeText,
+                    isUnavailable && styles.unavailableSizeText
+                  ]}>
+                    {size}
+                  </Text>
+                  {isUnavailable && (
+                    <View style={styles.diagonalLine} />
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
 
@@ -196,7 +209,7 @@ export default function ProductDetailScreen() {
           <Text style={styles.descriptionText}>
             Rubik sandals are your safe choice of sandals. Whether you walk a little or a lot, you will experience high comfort in both fit and movement. With its stylish look, Rubik is suitable for most things. The adjustable buckles ensure that the sandal sits well and firmly on the foot.
           </Text>
-          
+
           <View style={styles.featuresList}>
             <Text style={styles.featureItem}>• Original soft ergonomic Nallan footbed</Text>
             <Text style={styles.featureItem}>• Flat sole</Text>
@@ -209,7 +222,7 @@ export default function ProductDetailScreen() {
 
         {/* Expandable Sections */}
         <View style={styles.expandableSection}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.expandableHeader}
             onPress={() => setMaterialExpanded(!materialExpanded)}
           >
@@ -235,7 +248,7 @@ export default function ProductDetailScreen() {
         </View>
 
         <View style={styles.expandableSection}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.expandableHeader}
             onPress={() => setDeliveryExpanded(!deliveryExpanded)}
           >
@@ -271,14 +284,14 @@ export default function ProductDetailScreen() {
           <Text style={styles.similarTitle}>SIMILAR PRODUCTS</Text>
         </View>
 
+        {/* Features Section */}
+        <FeaturesSection />
+
+        {/* Footer */}
+        <Footer />
+
         <View style={styles.bottomSpacing} />
       </ScrollView>
-      
-      <ShoppingCart 
-        isVisible={isCartVisible}
-        onClose={() => setIsCartVisible(false)}
-        cartItem={selectedSize ? cartItem : null}
-      />
     </SafeAreaView>
   );
 }
@@ -287,27 +300,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#1f2937',
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#ffffff',
-    letterSpacing: 1,
-    fontFamily: 'Assistant, sans-serif',
-  },
-  headerRight: {
-    width: 40,
   },
   scrollView: {
     flex: 1,
@@ -425,31 +417,56 @@ const styles = StyleSheet.create({
   },
   sizeGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 0,
   },
   sizeButton: {
-    width: 50,
-    height: 50,
+    flex: 1,
+    aspectRatio: 1,
+    maxWidth: (width - 80) / 7, // Calculate max width based on screen width
+    marginHorizontal: 2,
     borderWidth: 1,
     borderColor: '#d1d5db',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
+    position: 'relative',
+    overflow: 'hidden',
   },
   selectedSizeButton: {
     borderColor: '#1f2937',
     backgroundColor: '#1f2937',
   },
+  unavailableSizeButton: {
+    backgroundColor: '#f3f4f6',
+    borderColor: '#e5e7eb',
+  },
   sizeText: {
-    fontSize: 16,
+    fontSize: Math.min(16, (width - 80) / 28), // Responsive font size
     fontWeight: '500',
     color: '#1f2937',
     fontFamily: 'Assistant, sans-serif',
+    zIndex: 2,
   },
   selectedSizeText: {
     color: '#ffffff',
+  },
+  unavailableSizeText: {
+    color: '#9ca3af',
+  },
+  diagonalLine: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'transparent',
+    borderBottomWidth: 1,
+    borderBottomColor: '#9ca3af',
+    transform: [{ rotate: '45deg' }],
+    zIndex: 1,
   },
   addToCartButton: {
     backgroundColor: '#fbbf24',

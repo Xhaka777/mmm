@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { heroImages } from '@/utils/images';
 
 export default function PromotionalSection() {
   const handleShopNow = () => {
@@ -12,9 +13,7 @@ export default function PromotionalSection() {
       {/* Hero Image */}
       <View style={styles.imageContainer}>
         <Image
-          source={{ 
-            uri: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=800' 
-          }}
+          source={heroImages.hero1}
           style={styles.heroImage}
           resizeMode="cover"
         />

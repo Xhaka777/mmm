@@ -2,118 +2,91 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { Plus } from 'lucide-react-native';
 import ProductOptionsModal from './ProductOptionsModal';
+import { productImages } from '@/utils/images';
 
 const bestsellerProducts = [
   {
     id: 1,
     name: 'ZOE HIGH-SOLED SLIPPERS - BROWN',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeBrown1, // Local image
     images: [
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoeBrown1,
+      productImages.shoeBrown2,
+      productImages.shoePink1,
+      productImages.shoePink2,
+      productImages.shoeOrange1,
+      productImages.shoeOrange2,
     ],
   },
   {
     id: 2,
-    name: 'ZOE HIGH-SOLED SLIPPERS - BLUSH',
+    name: 'ZOE HIGH-SOLED SLIPPERS - PINK',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoePink1, // Local image
     images: [
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoePink1,
+      productImages.shoePink2,
+      productImages.shoeBrown1,
+      productImages.shoeBrown2,
+      productImages.shoeOrange1,
+      productImages.shoeOrange2,
     ],
   },
   {
     id: 3,
-    name: 'ZOE HIGH-SOLED SLIPPERS - BLACK',
+    name: 'ZOE HIGH-SOLED SLIPPERS - ORANGE',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeOrange1, // Local image
     images: [
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoeOrange1,
+      productImages.shoeOrange2,
+      productImages.shoePink1,
+      productImages.shoePink2,
+      productImages.shoeBrown1,
+      productImages.shoeBrown2,
     ],
   },
   {
     id: 4,
-    name: 'ZOE HIGH-SOLED SLIPPERS - BEIGE',
+    name: 'ZOE HIGH-SOLED SLIPPERS - GREEN',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeGreen1, // Local image
     images: [
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoeGreen1,
+      productImages.shoeGreen2,
+      productImages.shoeViol1,
+      productImages.shoeViol2,
+      productImages.shoeCofe1,
+      productImages.shoeCofe2,
     ],
   },
   {
     id: 5,
-    name: 'ZOE HIGH-SOLED SLIPPERS - WHITE',
+    name: 'ZOE HIGH-SOLED SLIPPERS - VIOLET',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeViol1, // Local image
     images: [
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoeViol1,
+      productImages.shoeViol2,
+      productImages.shoeGreen1,
+      productImages.shoeGreen2,
+      productImages.shoeCofe1,
+      productImages.shoeCofe2,
     ],
   },
   {
     id: 6,
-    name: 'ZOE HIGH-SOLED SLIPPERS - NAVY',
+    name: 'ZOE HIGH-SOLED SLIPPERS - COFFEE',
     price: '£349.95',
-    image: 'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
+    image: productImages.shoeCofe1, // Local image
     images: [
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598509/pexels-photo-1598509.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 7,
-    name: 'ZOE HIGH-SOLED SLIPPERS - GREY',
-    price: '£349.95',
-    image: 'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=400',
-    images: [
-      'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=400',
-    ],
-  },
-  {
-    id: 8,
-    name: 'ZOE HIGH-SOLED SLIPPERS - TAN',
-    price: '£349.95',
-    image: 'https://images.pexels.com/photos/1656684/pexels-photo-1656684.jpeg?auto=compress&cs=tinysrgb&w=400',
-    images: [
-      'https://images.pexels.com/photos/1656684/pexels-photo-1656684.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1598507/pexels-photo-1598507.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg?auto=compress&cs=tinysrgb&w=400',
-      'https://images.pexels.com/photos/1670766/pexels-photo-1670766.jpeg?auto=compress&cs=tinysrgb&w=400',
+      productImages.shoeCofe1,
+      productImages.shoeCofe2,
+      productImages.shoeViol1,
+      productImages.shoeViol2,
+      productImages.shoeGreen1,
+      productImages.shoeGreen2,
     ],
   },
 ];
@@ -128,6 +101,7 @@ export default function BestsellersSection() {
   };
 
   const handleProductSelect = (product: any) => {
+    console.log('Product selected:', product.name); // Debug log
     setSelectedProduct(product);
     setIsModalVisible(true);
   };
@@ -135,9 +109,11 @@ export default function BestsellersSection() {
   const handleAddToCart = (productId: number, size: string) => {
     console.log('Add to cart:', productId, 'Size:', size);
     // Handle add to cart logic here
+    setIsModalVisible(false); // Close modal after adding to cart
   };
 
   const handleCloseModal = () => {
+    console.log('Closing modal'); // Debug log
     setIsModalVisible(false);
     setSelectedProduct(null);
   };
@@ -188,13 +164,7 @@ export default function BestsellersSection() {
         <Text style={styles.seeSlippersText}>SEE SLIPPERS</Text>
       </TouchableOpacity>
       
-      <ProductOptionsModal
-        isVisible={isModalVisible}
-        onClose={handleCloseModal}
-        product={selectedProduct}
-        onAddToCart={handleAddToCart}
-      />
-      
+      {/* Single ProductOptionsModal - removed duplicate */}
       <ProductOptionsModal
         isVisible={isModalVisible}
         onClose={handleCloseModal}

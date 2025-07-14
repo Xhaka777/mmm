@@ -1,19 +1,45 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useCart } from '@/contexts/CartContext';
 
 interface ProductCardProps {
+  id?: string;
   name: string;
   image: string;
   discountPrice: number;
   originalPrice: number;
 }
 
-export default function ProductCard({ name, image, discountPrice, originalPrice }: ProductCardProps) {
+export default function ProductCard({ 
+  id = '1', 
+  name, 
+  image, 
+  discountPrice, 
+  originalPrice 
+}: ProductCardProps) {
   const router = useRouter();
+  const { addToCart, setIsCartVisible } = useCart();
 
   const handlePress = () => {
     router.push('/product/1');
+  };
+
+  const handleAddToCart = (event: any) => {
+    // Prevent event bubbling to avoid navigating to product detail
+    event.stopPropagation();
+    
+    const cartItem = {
+      id: id,
+      name: name,
+      price: Math.round(discountPrice * 100), // Convert to cents
+      size: '38', // Default size - you can modify this logic
+      image: image,
+      quantity: 1,
+    };
+    
+    addToCart(cartItem);
+    // Removed setIsCartVisible(true) - don't auto-open cart
   };
 
   return (
@@ -31,7 +57,11 @@ export default function ProductCard({ name, image, discountPrice, originalPrice 
             <Text style={styles.originalPrice}>{originalPrice} €</Text>
           </View>
           
-          <TouchableOpacity style={styles.addToCartButton}>
+          <TouchableOpacity 
+            style={styles.addToCartButton}
+            onPress={handleAddToCart}
+            activeOpacity={0.7}
+          >
             <Text style={styles.addToCartText}>Shto në shportë</Text>
           </TouchableOpacity>
         </View>
@@ -60,6 +90,7 @@ const styles = StyleSheet.create({
     height: 160,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+    backgroundColor: '#ff44'
   },
   content: {
     padding: 16,
@@ -101,6 +132,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 6,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   addToCartText: {
     color: '#ffffff',
