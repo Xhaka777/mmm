@@ -7,6 +7,7 @@ import Animated, {
   runOnJS 
 } from 'react-native-reanimated';
 import { X, ChevronRight, ChevronLeft } from 'lucide-react-native';
+import { heroImages } from '@/utils/images';
 
 const { width } = Dimensions.get('window');
 
@@ -140,9 +141,9 @@ export default function SlidingMenu({ isVisible, onClose, onLoginPress }: Slidin
 
           <View style={styles.imageContainer}>
             <Image
-              source={{ uri: 'https://images.pexels.com/photos/1464625/pexels-photo-1464625.jpeg?auto=compress&cs=tinysrgb&w=600' }}
+              source={heroImages.women_login}
               style={styles.shopImage}
-              resizeMode="cover"
+              resizeMode='center'
             />
           </View>
         </View>
@@ -240,12 +241,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Assistant, sans-serif',
   },
   imageContainer: {
-    marginTop: 30,
-    borderRadius: 12,
     overflow: 'hidden',
+    margin: 10,
   },
   shopImage: {
     width: '100%',
-    height: 300,
+    height: 350,
   },
 });

@@ -18,9 +18,38 @@ export const productImages = {
     shoeCofe2: require('@/assets/images/products/N355_1L011COFE_6.jpeg'),
 } as const;
 
+export const flagIcons = {
+    kosovo: require('@/assets/icons/world.png'),
+    denmark: require('@/assets/icons/denmark.png'),
+    unitedStates: require('@/assets/icons/united-states.png'),
+    unitedKingdom: require('@/assets/icons/united-kingdom.png'), 
+    france: require('@/assets/icons/france.png'),
+    germany: require('@/assets/icons/germany.png'),
+}
+
 export const getImageSource = (imagePath: any) => {
     return imagePath;
 }
 
+export const getIconSource = (imagePath: any) => {
+    return imagePath;
+}
+
+export const getFlagIcon = (countryId: string) => {
+    const flagMap: { [key: string]: any } = {
+        'xk': flagIcons.kosovo,    
+        'dk': flagIcons.denmark,     
+        'us': flagIcons.unitedStates, 
+        'gb': flagIcons.unitedKingdom, 
+        'uk': flagIcons.unitedKingdom, 
+        'fr': flagIcons.france,      
+        'de': flagIcons.germany,     
+    };
+    
+    return flagMap[countryId.toLowerCase()] || flagIcons.kosovo; 
+};
+
+
 export type HeroImageKey = keyof typeof heroImages;
 export type ProductImageKey = keyof typeof productImages;
+export type FlagIconKey = keyof typeof flagIcons;

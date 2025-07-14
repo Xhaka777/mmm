@@ -7,14 +7,14 @@ const products = [
   {
     id: 1,
     name: 'Papuçe Anatomike per Femra-ARTSY-Art34',
-    image: productImages.shoeBrown1, // Local image
+    image: productImages.shoeBrown2, // Local image
     discountPrice: 19.8,
     originalPrice: 33,
   },
   {
     id: 2,
     name: 'Çanta Lëkure për Femra-LUXURY-Art45',
-    image: productImages.shoePink1, // Local image
+    image: productImages.shoePink2, // Local image
     discountPrice: 45.0,
     originalPrice: 65,
   },
@@ -28,7 +28,7 @@ const products = [
   {
     id: 4,
     name: 'Aksesore Lëkure-PREMIUM-Art78',
-    image: productImages.shoeGreen1, // Local image
+    image: productImages.shoeGreen2, // Local image
     discountPrice: 15.9,
     originalPrice: 25,
   },

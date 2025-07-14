@@ -7,6 +7,7 @@ import Animated, {
   runOnJS 
 } from 'react-native-reanimated';
 import { X, Minus, Plus } from 'lucide-react-native';
+import CheckoutScreen from './CheckoutScreen'; // Import the CheckoutScreen
 
 const { width } = Dimensions.get('window');
 
@@ -15,7 +16,7 @@ interface CartItem {
   name: string;
   price: number;
   size: string;
-  image: string;
+  image: any; // Changed to any for local images
   quantity: number;
 }
 
@@ -29,6 +30,7 @@ export default function ShoppingCart({ isVisible, onClose, cartItem }: ShoppingC
   const [quantity, setQuantity] = useState(1);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [isCheckoutVisible, setIsCheckoutVisible] = useState(false); // Add checkout state
   const translateX = useSharedValue(width);
 
   React.useEffect(() => {
@@ -61,10 +63,13 @@ export default function ShoppingCart({ isVisible, onClose, cartItem }: ShoppingC
 
   const handleCheckout = () => {
     if (acceptTerms) {
-      // Handle checkout logic
-      console.log('Going to checkout with quantity:', quantity);
-      handleClose();
+      console.log('Opening checkout screen');
+      setIsCheckoutVisible(true); // Open checkout instead of closing cart
     }
+  };
+
+  const handleCheckoutClose = () => {
+    setIsCheckoutVisible(false); // Close checkout screen
   };
 
   const handleRemove = () => {
@@ -100,11 +105,11 @@ export default function ShoppingCart({ isVisible, onClose, cartItem }: ShoppingC
 
             {/* Product Details */}
             <View style={styles.productContainer}>
-              <Image source={{ uri: cartItem.image }} style={styles.productImage} resizeMode="cover" />
+              <Image source={cartItem.image} style={styles.productImage} resizeMode="cover" />
               
               <View style={styles.productInfo}>
                 <Text style={styles.productName}>{cartItem.name}</Text>
-                <Text style={styles.productPrice}>{cartItem.price.toFixed(2)} KR</Text>
+                <Text style={styles.productPrice}>{(cartItem.price / 100).toFixed(2)} KR</Text>
                 <Text style={styles.productSize}>{cartItem.size}</Text>
                 
                 {/* Quantity Controls */}
@@ -172,6 +177,19 @@ export default function ShoppingCart({ isVisible, onClose, cartItem }: ShoppingC
           </>
         )}
       </Animated.View>
+
+      {/* Checkout Screen */}
+      <CheckoutScreen 
+        isVisible={isCheckoutVisible}
+        onClose={handleCheckoutClose}
+        cartData={{
+          items: [{
+            ...cartItem,
+            quantity: quantity
+          }],
+          total: totalPrice
+        }}
+      />
     </View>
   );
 }

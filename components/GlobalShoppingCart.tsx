@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, Switch, ScrollView } from 'react-native';
-import Animated, { 
-  useSharedValue, 
-  useAnimatedStyle, 
-  withTiming, 
-  runOnJS 
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS
 } from 'react-native-reanimated';
 import { X, Minus, Plus, Trash2 } from 'lucide-react-native';
 import { useCart } from '@/contexts/CartContext';
@@ -18,15 +18,15 @@ interface GlobalShoppingCartProps {
 
 export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppingCartProps) {
   const [acceptTerms, setAcceptTerms] = useState(false);
-  const { 
-    cartItems, 
-    updateQuantity, 
-    removeFromCart, 
-    getTotalPrice, 
+  const {
+    cartItems,
+    updateQuantity,
+    removeFromCart,
+    getTotalPrice,
     getTotalItems,
-    clearCart 
+    clearCart
   } = useCart();
-  
+
   const translateX = useSharedValue(width);
 
   React.useEffect(() => {
@@ -102,40 +102,43 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
             <ScrollView style={styles.cartItemsContainer} showsVerticalScrollIndicator={false}>
               {cartItems.map((item, index) => (
                 <View key={`${item.id}-${item.size}`} style={styles.productContainer}>
-                  <Image source={{ uri: item.image }} style={styles.productImage} resizeMode="cover" />
-                  
+                  <Image
+                    source={item.image}
+                    style={styles.productImage}
+                    resizeMode="cover"
+                  />
                   <View style={styles.productInfo}>
                     <Text style={styles.productName} numberOfLines={2}>{item.name}</Text>
                     <Text style={styles.productPrice}>€{(item.price / 100).toFixed(2)}</Text>
                     <Text style={styles.productSize}>Size: {item.size}</Text>
-                    
+
                     {/* Quantity Controls */}
                     <View style={styles.quantityContainer}>
-                      <TouchableOpacity 
-                        style={styles.quantityButton} 
+                      <TouchableOpacity
+                        style={styles.quantityButton}
                         onPress={() => handleQuantityChange(item.id, item.size, item.quantity, -1)}
                       >
                         <Minus size={16} color="#1f2937" />
                       </TouchableOpacity>
-                      
+
                       <Text style={styles.quantityText}>{item.quantity}</Text>
-                      
-                      <TouchableOpacity 
-                        style={styles.quantityButton} 
+
+                      <TouchableOpacity
+                        style={styles.quantityButton}
                         onPress={() => handleQuantityChange(item.id, item.size, item.quantity, 1)}
                       >
                         <Plus size={16} color="#1f2937" />
                       </TouchableOpacity>
-                      
-                      <TouchableOpacity 
-                        style={styles.removeButton} 
+
+                      <TouchableOpacity
+                        style={styles.removeButton}
                         onPress={() => handleRemoveItem(item.id, item.size)}
                       >
                         <Trash2 size={16} color="#ef4444" />
                       </TouchableOpacity>
                     </View>
                   </View>
-                  
+
                   <View style={styles.itemTotal}>
                     <Text style={styles.itemTotalText}>
                       €{((item.price * item.quantity) / 100).toFixed(2)}
@@ -148,16 +151,16 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
             {/* Bottom Section */}
             <View style={styles.bottomSection}>
               <View style={styles.separator} />
-              
+
               {/* Total */}
               <View style={styles.totalContainer}>
                 <Text style={styles.totalLabel}>Total:</Text>
                 <Text style={styles.totalPrice}>€{(totalPrice / 100).toFixed(2)}</Text>
               </View>
-              
+
               {/* Delivery Info */}
               <Text style={styles.deliveryText}>Delivery is calculated at checkout.</Text>
-              
+
               {/* Terms and Conditions */}
               <View style={styles.termsContainer}>
                 <Switch
@@ -170,13 +173,13 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
                   I accept the <Text style={styles.termsLink}>terms and conditions</Text>
                 </Text>
               </View>
-              
+
               {/* Checkout Button */}
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={[
-                  styles.checkoutButton, 
+                  styles.checkoutButton,
                   (!acceptTerms || isEmpty) && styles.disabledButton
-                ]} 
+                ]}
                 onPress={handleCheckout}
                 disabled={!acceptTerms || isEmpty}
               >

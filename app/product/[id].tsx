@@ -101,7 +101,7 @@ export default function ProductDetailScreen() {
           </ScrollView>
 
           {/* Image Pagination */}
-          <View style={styles.imagePagination}>
+          {/* <View style={styles.imagePagination}>
             {productImageArray.map((image, index) => (
               <TouchableOpacity key={index}>
                 <Image
@@ -112,12 +112,12 @@ export default function ProductDetailScreen() {
               </TouchableOpacity>
             ))}
 
-          </View>
+          </View> */}
         </View>
 
         {/* Thumbnail Images */}
-        <ScrollView
-          horizontal
+        <ScrollView 
+          horizontal 
           showsHorizontalScrollIndicator={false}
           style={styles.thumbnailContainer}
           contentContainerStyle={styles.thumbnailContent}
@@ -135,7 +135,7 @@ export default function ProductDetailScreen() {
               }}
             >
               <Image
-                source={{ uri: image }}
+                source={image} // CHANGED: Use local image directly, not {{ uri: image }}
                 style={styles.thumbnailImage}
                 resizeMode="cover"
               />
