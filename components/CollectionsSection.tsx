@@ -55,7 +55,7 @@ export default function CollectionsSection() {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Summer Collections</Text>
-      <Text style={styles.kollektionetTitle}>Kolektionet</Text>
+      <Text style={styles.kollektionetTitle}>Koleksionet</Text>
       
       <View style={styles.sliderContainer}>
         <ScrollView

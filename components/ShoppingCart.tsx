@@ -99,9 +99,9 @@ export default function ShoppingCart({ isVisible, onClose, cartItem }: ShoppingC
         ) : (
           <>
             {/* Free Delivery Message */}
-            <View style={styles.freeDeliveryContainer}>
+            {/* <View style={styles.freeDeliveryContainer}>
               <Text style={styles.freeDeliveryText}>You have achieved free delivery!</Text>
-            </View>
+            </View> */}
 
             {/* Product Details */}
             <View style={styles.productContainer}>

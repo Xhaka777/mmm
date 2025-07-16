@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { X, Minus, Plus, Trash2 } from 'lucide-react-native';
 import { useCart } from '@/contexts/CartContext';
+import CheckoutScreen from './CheckoutScreen'; // ✅ ADD THIS IMPORT
 
 const { width } = Dimensions.get('window');
 
@@ -18,6 +19,7 @@ interface GlobalShoppingCartProps {
 
 export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppingCartProps) {
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [isCheckoutVisible, setIsCheckoutVisible] = useState(false); // ✅ ADD THIS STATE
   const {
     cartItems,
     updateQuantity,
@@ -48,6 +50,19 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
     });
   };
 
+  // ✅ FIXED CHECKOUT HANDLER
+  const handleCheckout = () => {
+    if (acceptTerms && cartItems.length > 0) {
+      console.log('Opening checkout screen');
+      setIsCheckoutVisible(true); // Open checkout instead of closing cart
+    }
+  };
+
+  // ✅ ADD CHECKOUT CLOSE HANDLER
+  const handleCheckoutClose = () => {
+    setIsCheckoutVisible(false);
+  };
+
   const handleQuantityChange = (id: string, size: string, currentQuantity: number, change: number) => {
     const newQuantity = currentQuantity + change;
     if (newQuantity >= 1) {
@@ -57,14 +72,6 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
 
   const handleRemoveItem = (id: string, size: string) => {
     removeFromCart(id, size);
-  };
-
-  const handleCheckout = () => {
-    if (acceptTerms && cartItems.length > 0) {
-      // Handle checkout logic
-      console.log('Going to checkout with items:', cartItems);
-      handleClose();
-    }
   };
 
   const totalPrice = getTotalPrice();
@@ -191,9 +198,20 @@ export default function GlobalShoppingCart({ isVisible, onClose }: GlobalShoppin
           </>
         )}
       </Animated.View>
+
+      {/* ✅ ADD CHECKOUT SCREEN COMPONENT */}
+      <CheckoutScreen 
+        isVisible={isCheckoutVisible}
+        onClose={handleCheckoutClose}
+        cartData={{
+          items: cartItems,
+          total: totalPrice
+        }}
+      />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   overlay: {

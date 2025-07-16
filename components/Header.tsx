@@ -69,7 +69,7 @@ export default function Header() {
         </View>
         
         <View style={styles.centerSection}>
-          <Text style={styles.brandName}>nallan</Text>
+          <Text style={styles.brandName}>Nallan</Text>
         </View>
         
         <View style={styles.rightSection}>

@@ -51,7 +51,6 @@ export default function CheckoutScreen({ isVisible, onClose, cartData }: Checkou
   const [selectedPayment, setSelectedPayment] = useState('mobilepay');
   const [selectedBilling, setSelectedBilling] = useState('same');
   const [discountCode, setDiscountCode] = useState('');
-  const [orderOverviewExpanded, setOrderOverviewExpanded] = useState(false);
 
   const translateX = useSharedValue(width);
 
@@ -109,52 +108,6 @@ export default function CheckoutScreen({ isVisible, onClose, cartData }: Checkou
         </View>
 
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          {/* Order Overview */}
-          <TouchableOpacity 
-            style={styles.orderOverview}
-            onPress={() => setOrderOverviewExpanded(!orderOverviewExpanded)}
-          >
-            <View style={styles.orderOverviewHeader}>
-              <Text style={styles.orderOverviewText}>Order overview</Text>
-              <ChevronDown size={20} color="#3b82f6" />
-            </View>
-            <Text style={styles.orderTotal}>{(totalPrice / 100).toFixed(2)} kr.</Text>
-          </TouchableOpacity>
-
-          {orderOverviewExpanded && (
-            <View style={styles.orderDetails}>
-              {checkoutItems.map((item, index) => (
-                <View key={`${item.id}-${item.size}`} style={styles.orderItem}>
-                  <View style={styles.orderItemLeft}>
-                    <View style={styles.quantityBadge}>
-                      <Text style={styles.quantityText}>{item.quantity}</Text>
-                    </View>
-                    <Image source={item.image} style={styles.orderItemImage} />
-                    <View style={styles.orderItemInfo}>
-                      <Text style={styles.orderItemName}>{item.name}</Text>
-                      <Text style={styles.orderItemSize}>{item.size}</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.orderItemPrice}>
-                    {((item.price * item.quantity) / 100).toFixed(2)} kr.
-                  </Text>
-                </View>
-              ))}
-              
-              <View style={styles.discountSection}>
-                <TextInput
-                  style={styles.discountInput}
-                  placeholder="Discount code"
-                  value={discountCode}
-                  onChangeText={setDiscountCode}
-                />
-                <TouchableOpacity style={styles.useButton}>
-                  <Text style={styles.useButtonText}>Use</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-
           {/* Contact Information */}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
@@ -348,24 +301,61 @@ export default function CheckoutScreen({ isVisible, onClose, cartData }: Checkou
             </TouchableOpacity>
           </View>
 
-          {/* Order Summary */}
-          <View style={styles.orderSummary}>
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Subtotal</Text>
-              <Text style={styles.summaryValue}>{(totalPrice / 100).toFixed(2)} kr.</Text>
+          {/* NEW ORDER SUMMARY SECTION - Moved to bottom */}
+          <View style={styles.orderSummarySection}>
+            {/* Order Items */}
+            <View style={styles.orderItemsContainer}>
+              {checkoutItems.map((item, index) => (
+                <View key={`${item.id}-${item.size}`} style={styles.orderItem}>
+                  <View style={styles.orderItemLeft}>
+                    <View style={styles.quantityBadge}>
+                      <Text style={styles.quantityText}>{item.quantity}</Text>
+                    </View>
+                    <Image source={item.image} style={styles.orderItemImage} />
+                    <View style={styles.orderItemInfo}>
+                      <Text style={styles.orderItemName}>{item.name}</Text>
+                      <Text style={styles.orderItemSize}>{item.size}</Text>
+                    </View>
+                  </View>
+                  <Text style={styles.orderItemPrice}>
+                    €{((item.price * item.quantity) / 100).toFixed(2)}
+                  </Text>
+                </View>
+              ))}
             </View>
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Delivery</Text>
-              <Text style={styles.summaryValue}>Angiv leveringsadresse</Text>
+            
+            {/* Discount Code Section */}
+            <View style={styles.discountSection}>
+              <TextInput
+                style={styles.discountInput}
+                placeholder="Discount code"
+                value={discountCode}
+                onChangeText={setDiscountCode}
+              />
+              <TouchableOpacity style={styles.useButton}>
+                <Text style={styles.useButtonText}>Use</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total</Text>
-              <View style={styles.totalRight}>
-                <Text style={styles.currency}>DKK</Text>
-                <Text style={styles.totalValue}>{(totalPrice / 100).toFixed(2)} kr.</Text>
+
+            {/* Summary Calculations */}
+            <View style={styles.summaryCalculations}>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Subtotal</Text>
+                <Text style={styles.summaryValue}>€{(totalPrice / 100).toFixed(2)}</Text>
               </View>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Delivery</Text>
+                <Text style={styles.summaryValue}>Enter delivery address</Text>
+              </View>
+              <View style={styles.totalRow}>
+                <Text style={styles.totalLabel}>Total</Text>
+                <View style={styles.totalRight}>
+                  <Text style={styles.currency}>EUR</Text>
+                  <Text style={styles.totalValue}>€{(totalPrice / 100).toFixed(2)}</Text>
+                </View>
+              </View>
+              <Text style={styles.taxInfo}>Including €{(taxes / 100).toFixed(2)} in taxes</Text>
             </View>
-            <Text style={styles.taxInfo}>Including DKK {(taxes / 100).toFixed(2)} in taxes</Text>
           </View>
 
           <View style={styles.bottomSpacing} />
@@ -429,119 +419,6 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
-  },
-  orderOverview: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#f9fafb',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  orderOverviewHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  orderOverviewText: {
-    fontSize: 16,
-    color: '#3b82f6',
-    marginRight: 8,
-    fontFamily: 'Assistant, sans-serif',
-  },
-  orderTotal: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1f2937',
-    fontFamily: 'Assistant, sans-serif',
-  },
-  orderDetails: {
-    backgroundColor: '#f9fafb',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  orderItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  orderItemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  quantityBadge: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#6b7280',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  quantityText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
-    fontFamily: 'Assistant, sans-serif',
-  },
-  orderItemImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 8,
-    marginRight: 12,
-  },
-  orderItemInfo: {
-    flex: 1,
-  },
-  orderItemName: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#1f2937',
-    fontFamily: 'Assistant, sans-serif',
-  },
-  orderItemSize: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontFamily: 'Assistant, sans-serif',
-  },
-  orderItemPrice: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1f2937',
-    fontFamily: 'Assistant, sans-serif',
-  },
-  discountSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  discountInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 14,
-    fontFamily: 'Assistant, sans-serif',
-  },
-  useButton: {
-    backgroundColor: '#e5e7eb',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginLeft: 8,
-  },
-  useButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1f2937',
-    fontFamily: 'Assistant, sans-serif',
   },
   section: {
     paddingHorizontal: 20,
@@ -742,9 +619,110 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 4,
   },
-  orderSummary: {
-    paddingHorizontal: 20,
-    paddingVertical: 24,
+  // NEW STYLES FOR ORDER SUMMARY SECTION
+  orderSummarySection: {
+    backgroundColor: '#f9fafb',
+    marginHorizontal: 20,
+    marginVertical: 20,
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
+  orderItemsContainer: {
+    marginBottom: 16,
+  },
+  orderItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e7eb',
+  },
+  orderItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  quantityBadge: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#6b7280',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  quantityText: {
+    color: '#ffffff',
+    fontSize: 12,
+    fontWeight: '600',
+    fontFamily: 'Assistant, sans-serif',
+  },
+  orderItemImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  orderItemInfo: {
+    flex: 1,
+  },
+  orderItemName: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1f2937',
+    fontFamily: 'Assistant, sans-serif',
+    marginBottom: 2,
+  },
+  orderItemSize: {
+    fontSize: 12,
+    color: '#6b7280',
+    fontFamily: 'Assistant, sans-serif',
+  },
+  orderItemPrice: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1f2937',
+    fontFamily: 'Assistant, sans-serif',
+  },
+  discountSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+  },
+  discountInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
+    fontFamily: 'Assistant, sans-serif',
+    backgroundColor: '#ffffff',
+  },
+  useButton: {
+    backgroundColor: '#e5e7eb',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  useButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1f2937',
+    fontFamily: 'Assistant, sans-serif',
+  },
+  summaryCalculations: {
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
   },
   summaryRow: {
     flexDirection: 'row',

@@ -5,13 +5,13 @@ const { width } = Dimensions.get('window');
 
 interface CollectionCardProps {
   name: string;
-  image: string;
+  image: any;
 }
 
 export default function CollectionCard({ name, image }: CollectionCardProps) {
   return (
     <TouchableOpacity style={styles.container}>
-      <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+      <Image source={image} style={styles.image} resizeMode="cover" />
       <Text style={styles.name}>{name}</Text>
     </TouchableOpacity>
   );
